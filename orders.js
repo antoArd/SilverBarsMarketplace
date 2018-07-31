@@ -1,13 +1,15 @@
-﻿
 var orders = {
     register: function (userId, orderQuantity, pricePerKg, orderType) {
 
-        var orderId = orders.list.push({
+        var orderId = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+		
+		orders.list.push({
+			orderId: orderId,
             userId: userId,
             orderQuantity: orderQuantity,
             pricePerKg: pricePerKg,
             orderType: orderType
-        }) - 1;
+        });
 
         var summary = orders.summary[orderType][pricePerKg];
         orders.summary[orderType][pricePerKg] = summary ? summary + orderQuantity : orderQuantity;
@@ -15,7 +17,10 @@ var orders = {
         return orderId;
     },
     cancel: function (orderId) {
-        var cancelledOrder = orders.list.splice(orderId, 1)[0];
+        var cancelledOrder = orders.list.splice(
+		orders.list.map(function(order){
+			return order.orderId;			
+		}).indexOf(orderId), 1)[0];
 
         orders.summary[cancelledOrder.orderType][cancelledOrder.pricePerKg] -= cancelledOrder.orderQuantity;
 
